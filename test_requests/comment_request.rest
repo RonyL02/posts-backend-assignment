@@ -1,0 +1,33 @@
+###
+
+POST http://localhost:3000/comments
+
+Content-Type: application/json
+
+{
+    "senderId":65465,
+    "postId":"fdhfdgh",
+    "content":"hgfhgfhg"
+}
+
+###
+
+GET http://localhost:3000/comments
+
+###
+
+GET http://localhost:3000/comments/post/34535435
+
+###
+
+PUT http://localhost:3000/comments
+
+Content-Type: application/json
+
+{
+    "content":"hgfhgfhg"
+}
+
+###
+
+DELETE http://localhost:3000/comments/54646546546
