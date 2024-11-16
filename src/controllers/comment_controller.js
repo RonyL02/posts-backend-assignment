@@ -17,7 +17,7 @@ const createComment = async (request, response) => {
 const getComments = async (request, response) => {
     const postFilter = request.query.post;
 
-    const comments = [];
+    let comments = [];
 
     try {
         if (postFilter) {
