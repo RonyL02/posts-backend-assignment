@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const CommentRouter = require('./routes/comment_routes');
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ db.once('open', () => console.log('connected to db'));
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/comments', CommentRouter);
 
 app.get('/', (request, response) => {
     response.send("hello 👋");
