@@ -1,6 +1,12 @@
 ###
-GET http://localhost:3000/
+GET http://localhost:3000/posts/
 
+
+###
+GET  http://localhost:3000/posts/6738f272ddc37566bb784e7d
+
+###
+GET http://localhost:3000/posts?sender=57866423
 
 
 ###
@@ -15,18 +21,13 @@ Content-Type: application/json
 }
 
 ###
-PUT  http://localhost:3000/posts/75645343
+PUT  http://localhost:3000/posts/6738f272ddc37566bb784e7d
 Content-Type: application/json
 
 {
     "senderId":57866423,
-    "title":"My first ...",
+    "title":"shirannnnnn",
     "content":"gdgdth"
 
 }
 
-###
-GET  http://localhost:3000/posts/67389442fb989d300a7f4f80
-
-###
-GET http://localhost:3000/posts?sender=<sender_id>

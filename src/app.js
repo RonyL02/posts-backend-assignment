@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+const postRouter= require("./routes/post_routes");
 dotenv.config();
 
 mongoose.connect(process.env.DB_CONNECTION_URL);
@@ -13,7 +13,7 @@ db.once('open', () => console.log('connected to db'));
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use("/posts",postRouter);
 app.get('/', (request, response) => {
     response.send("hello 👋");
 });
