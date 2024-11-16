@@ -1,0 +1,33 @@
+###
+GET http://localhost:3000/posts/
+
+
+###
+GET  http://localhost:3000/posts/6738f272ddc37566bb784e7d
+
+###
+GET http://localhost:3000/posts?sender=57866423
+
+
+###
+POST  http://localhost:3000/posts/
+Content-Type: application/json
+
+{
+    "senderId":57866423,
+    "title":"My first ...",
+    "content":"gdgdth"
+
+}
+
+###
+PUT  http://localhost:3000/posts/6738f272ddc37566bb784e7d
+Content-Type: application/json
+
+{
+    "senderId":57866423,
+    "title":"shirannnnnn",
+    "content":"gdgdth"
+
+}
+
