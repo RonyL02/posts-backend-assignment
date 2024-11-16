@@ -16,11 +16,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/comments', CommentRouter);
-app.use('/posts',PostRouter);
-
-app.get('/', (request, response) => {
-    response.send("hello 👋");
-});
+app.use('/posts', PostRouter);
 
 const port = process.env.PORT;
 

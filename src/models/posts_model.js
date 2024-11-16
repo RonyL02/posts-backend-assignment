@@ -3,13 +3,20 @@ const Schema = mongoose.Schema
 
 
 const postSchema = new Schema({
-    senderId: Number,
+    senderId: {
+        type: Number,
+        required: true
+    },
     title: {
         type: String,
         required: true
     },
-    content: String,
+    content: {
+        type: String,
+        required: true
+    },
 })
 
-const postModel  = mongoose.model("posts",postSchema)
-module.exports = postModel
+const postModel = mongoose.model("posts", postSchema);
+
+module.exports = postModel;

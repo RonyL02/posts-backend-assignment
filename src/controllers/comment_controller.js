@@ -4,9 +4,9 @@ const createComment = async (request, response) => {
     const newPost = request.body;
 
     try {
-        const { _id: newPostId } = await CommentModel.create(newPost);
+        const { _id: newCommentId } = await CommentModel.create(newPost);
 
-        response.send({ newPostId });
+        response.status(201).send({ newCommentId });
     } catch (error) {
         console.error(error.message);
 
@@ -17,15 +17,8 @@ const createComment = async (request, response) => {
 const getComments = async (request, response) => {
     const postFilter = request.query.post;
 
-    let comments = [];
-
     try {
-        if (postFilter) {
-            comments = await CommentModel.find({ postId: postFilter });
-        } else {
-            comments = await CommentModel.find();
-        }
-
+        const comments = await CommentModel.find(postFilter ? { postId: postFilter } : {});
         response.send(comments);
     } catch (error) {
         console.error(error.message);
@@ -38,7 +31,7 @@ const updateComment = async (request, response) => {
     const updatedComment = request.body;
 
     try {
-        await CommentModel.updateOne({ _id: commentId }, updatedComment);
+        await CommentModel.findByIdAndUpdate(commentId, updatedComment);
         response.send();
     } catch (error) {
         console.error(error.message);

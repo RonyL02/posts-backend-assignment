@@ -1,13 +1,12 @@
 ###
 
-POST http://localhost:3000/comments
-
+POST http://localhost:3000/comments/
 Content-Type: application/json
 
 {
-    "senderId":65465,
-    "postId":"fdhfdgh",
-    "content":"hgfhgfhg"
+    "senderId":555555,
+    "postId":"673924d57453a2741caf84e1",
+    "content":"nice"
 }
 
 ###
@@ -16,20 +15,19 @@ GET http://localhost:3000/comments/
 
 ###
 
-GET http://localhost:3000/comments?post=34535435
+GET http://localhost:3000/comments?post=673924d57453a2741caf84e1
 
 ###
 
-PUT http://localhost:3000/comments/:id
-
+PUT http://localhost:3000/comments/673925594ff411c885ef3aa4
 Content-Type: application/json
 
 {
-    "senderId":65465,
-    "postId":"fdhfdgh",
-    "content":"hgfhgfhg"
+    "senderId":555555,
+    "postId":"673924d57453a2741caf84e1",
+    "content":"very nice"
 }
 
 ###
 
-DELETE http://localhost:3000/comments/54646546546
+DELETE http://localhost:3000/comments/673903d22372620229aa275c

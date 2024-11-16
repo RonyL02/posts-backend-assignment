@@ -1,0 +1,31 @@
+###
+GET http://localhost:3000/posts/
+
+
+###
+GET  http://localhost:3000/posts/673924d57453a2741caf84e1
+
+###
+GET http://localhost:3000/posts?sender=57866423
+
+
+###
+POST  http://localhost:3000/posts/
+Content-Type: application/json
+
+{
+    "senderId":1111,
+    "title":"hello",
+    "content":"world"
+}
+
+###
+PUT  http://localhost:3000/posts/673924d57453a2741caf84e1
+Content-Type: application/json
+
+{
+    "senderId":1111,
+    "title":"helloo",
+    "content":"world"
+}
+
