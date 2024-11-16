@@ -16,15 +16,17 @@ GET http://localhost:3000/comments
 
 ###
 
-GET http://localhost:3000/comments/post/34535435
+GET http://localhost:3000/comments?post=34535435
 
 ###
 
-PUT http://localhost:3000/comments
+PUT http://localhost:3000/comments/:id
 
 Content-Type: application/json
 
 {
+    "senderId":65465,
+    "postId":"fdhfdgh",
     "content":"hgfhgfhg"
 }
 
