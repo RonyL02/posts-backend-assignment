@@ -1,54 +1,57 @@
-const { response } = require("express");
 const postModel = require("../models/posts_model");
 
 const getAllPosts = async (request, response) => {
-  const sender = request.query.sender;
-  let posts = [];
+  const senderFilter = request.query.sender;
+
   try {
-    if (sender) {
-      posts = await postModel.find({ senderId: sender });
-    } else {
-      posts = await postModel.find();
-    }
+    const posts = await postModel.find(senderFilter ? { senderId: senderFilter } : {});
     response.send(posts);
   } catch (error) {
     console.error(error.message);
-    response.status(500).send();
+    response.status(400).send();
   }
 };
 
 const getPostById = async (request, response) => {
   const id = request.params.id;
+
   try {
     post = await postModel.findById(id);
-    response.send(post);
+
+    if (post) {
+      response.send(post);
+    } else {
+      response.status(404).send();
+    }
   } catch (error) {
     console.error(error.message);
-    response.status(500).send();
+    response.status(400).send();
   }
 };
 
 const createPost = async (request, response) => {
-  const body = request.body;
+  const newPost = request.body;
+
   try {
-    const {_id}= await postModel.create(body);
-    response.send(_id);
+    const { _id: newPostId } = await postModel.create(newPost);
+    response.send(newPostId);
   } catch (error) {
     console.error(error.message);
-    response.status(500).send();
+    response.status(400).send();
   }
 };
 
-const updatePost = async(request, response) => {
-    const id = request.params.id;
-    const body= request.body;
+const updatePost = async (request, response) => {
+  const id = request.params.id;
+  const updatedPost = request.body;
+
   try {
-    await postModel.findByIdAndUpdate(id,body);
+    await postModel.findByIdAndUpdate(id, updatedPost);
     response.send();
   } catch (error) {
     console.error(error.message);
-    response.status(500).send();
-    
+    response.status(400).send();
   }
-  };
-  module.exports = {getAllPosts,getPostById,createPost,updatePost};
+};
+
+module.exports = { getAllPosts, getPostById, createPost, updatePost };
