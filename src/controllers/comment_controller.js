@@ -1,10 +1,10 @@
 const CommentModel = require('../models/comment_model');
 
 const createComment = async (request, response) => {
-    const newPost = request.body;
+    const newComment = request.body;
 
     try {
-        const { _id: newCommentId } = await CommentModel.create(newPost);
+        const { _id: newCommentId } = await CommentModel.create(newComment);
 
         response.status(201).send({ newCommentId });
     } catch (error) {
