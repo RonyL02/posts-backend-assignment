@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const express = require('express');
+// const express = require('express'); // Removed duplicate declaration
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const CommentRouter = require('./routes/comment_routes');
@@ -9,7 +9,7 @@ dotenv.config();
 
 mongoose.connect(process.env.DB_CONNECTION_URL);
 const db = mongoose.connection;
-db.on('error', error => console.error(error));
+db.on('error', (error: Error) => console.error(error));
 db.once('open', () => console.log('connected to db'));
 
 const app = express();

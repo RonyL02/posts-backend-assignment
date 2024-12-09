@@ -1,6 +1,7 @@
 const CommentModel = require('../models/comment_model');
+import { Request, Response } from 'express';
 
-const createComment = async (request, response) => {
+const createComment = async (request:Request, response:Response) => {
     const newPost = request.body;
 
     try {
@@ -8,25 +9,25 @@ const createComment = async (request, response) => {
 
         response.status(201).send({ newCommentId });
     } catch (error) {
-        console.error(error.message);
+        console.error((error as any).message);
 
         response.status(400).send();
     }
 }
 
-const getComments = async (request, response) => {
+const getComments = async (request:Request, response:Response) => {
     const postFilter = request.query.post;
 
     try {
         const comments = await CommentModel.find(postFilter ? { postId: postFilter } : {});
         response.send(comments);
     } catch (error) {
-        console.error(error.message);
+        console.error((error as any).message);
         response.status(400).send();
     }
 }
 
-const updateComment = async (request, response) => {
+const updateComment = async (request:Request, response:Response) => {
     const commentId = request.params.id;
     const updatedComment = request.body;
 
@@ -34,19 +35,19 @@ const updateComment = async (request, response) => {
         await CommentModel.findByIdAndUpdate(commentId, updatedComment);
         response.send();
     } catch (error) {
-        console.error(error.message);
+        console.error((error as any).message);
         response.status(400).send();
     }
 }
 
-const deleteComment = async (request, response) => {
+const deleteComment = async (request:Request, response:Response) => {
     const commentId = request.params.id;
 
     try {
         await CommentModel.findByIdAndDelete(commentId);
         response.send();
     } catch (error) {
-        console.error(error.message);
+        console.error((error as any).message);
         response.status(400).send();
     }
 }
