@@ -3,10 +3,10 @@ import CommentModel from '../models/comment_model';
 import { Request, Response } from 'express';
 
 const createComment = async (request:Request, response:Response) => {
-    const newPost = request.body;
+    const newComment = request.body;
 
     try {
-        const { _id: newCommentId } = await CommentModel.create(newPost);
+        const { _id: newCommentId } = await CommentModel.create(newComment);
 
         response.status(201).send({ newCommentId });
     } catch (error) {
