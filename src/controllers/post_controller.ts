@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-const postModel = require("../models/posts_model");
+import postModel from '../models/posts_model';
+
 
 const getAllPosts = async (request:Request, response:Response) => {
   const senderFilter = request.query.sender;
@@ -84,5 +85,4 @@ const updatePost = async (request:Request, response:Response) => {
     response.status(400).send();
   }
 };
-
-module.exports = { getAllPosts, getPostById, createPost, updatePost };
+export { getAllPosts, getPostById, createPost, updatePost };

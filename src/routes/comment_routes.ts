@@ -1,14 +1,15 @@
 import express from 'express';
-const CommentController = require('../controllers/comment_controller');
+import * as CommentController from '../controllers/comment_controller';
 
-const router = express.Router();
 
-router.post('/', CommentController.createComment.bind(CommentController));
+const CommentRouter = express.Router();
 
-router.get('/', CommentController.getComments.bind(CommentController));
+CommentRouter.post('/', CommentController.createComment);
 
-router.put('/:id', CommentController.updateComment.bind(CommentController));
+CommentRouter.get('/', CommentController.getComments);
 
-router.delete('/:id', CommentController.deleteComment.bind(CommentController));
+CommentRouter.put('/:id', CommentController.updateComment);
 
-module.exports = router;
+CommentRouter.delete('/:id', CommentController.deleteComment);
+
+export { CommentRouter };

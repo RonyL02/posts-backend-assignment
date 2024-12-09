@@ -1,4 +1,5 @@
-const CommentModel = require('../models/comment_model');
+
+import CommentModel from '../models/comment_model';
 import { Request, Response } from 'express';
 
 const createComment = async (request:Request, response:Response) => {
@@ -51,5 +52,4 @@ const deleteComment = async (request:Request, response:Response) => {
         response.status(400).send();
     }
 }
-
-module.exports = { createComment, getComments, updateComment, deleteComment };
+export { createComment, getComments, updateComment, deleteComment };

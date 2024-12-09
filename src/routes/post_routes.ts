@@ -1,14 +1,14 @@
-const postController = require("../controllers/post_controller");
-const express = require("express");
+import * as postController from "../controllers/post_controller";
+import express from "express";
 
-const router = express.Router();
+const PostRouter = express.Router();
 
-router.get("/", postController.getAllPosts.bind(postController));
+PostRouter.get("/", postController.getAllPosts);
 
-router.get("/:id", postController.getPostById.bind(postController));
+PostRouter.get("/:id", postController.getPostById);
 
-router.put("/:id", postController.updatePost.bind(postController));
+PostRouter.put("/:id", postController.updatePost);
 
-router.post("/", postController.createPost.bind(postController));
+PostRouter.post("/", postController.createPost);
 
-module.exports = router;
+export { PostRouter };

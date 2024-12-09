@@ -1,13 +1,19 @@
-const dotenv = require('dotenv');
-// const express = require('express'); // Removed duplicate declaration
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const CommentRouter = require('./routes/comment_routes');
-const PostRouter = require('./routes/post_routes');
+
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import { CommentRouter } from './routes/comment_routes';
+import { PostRouter } from './routes/post_routes';
+
 
 dotenv.config();
 
-mongoose.connect(process.env.DB_CONNECTION_URL);
+const dbConnectionUrl = process.env.DB_CONNECTION_URL;
+if (!dbConnectionUrl) {
+    throw new Error('DB_CONNECTION_URL is not defined');
+}
+mongoose.connect(dbConnectionUrl);
 const db = mongoose.connection;
 db.on('error', (error: Error) => console.error(error));
 db.once('open', () => console.log('connected to db'));
