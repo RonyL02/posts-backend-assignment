@@ -10,21 +10,21 @@ const createComment = async (request:Request, response:Response) => {
 
         response.status(201).send({ newCommentId });
     } catch (error) {
-        console.error((error as any).message);
+        console.error(error);
 
-        response.status(400).send();
+        response.status(500).send();
     }
 }
 
 const getComments = async (request:Request, response:Response) => {
-    const postFilter = request.query.post;
+    const postId = request.query.post;
 
     try {
-        const comments = await CommentModel.find(postFilter ? { postId: postFilter } : {});
+        const comments = await CommentModel.find(postId ? { postId } : {});
         response.send(comments);
     } catch (error) {
-        console.error((error as any).message);
-        response.status(400).send();
+        console.error(error);
+        response.status(500).send();
     }
 }
 
@@ -36,8 +36,8 @@ const updateComment = async (request:Request, response:Response) => {
         await CommentModel.findByIdAndUpdate(commentId, updatedComment);
         response.send();
     } catch (error) {
-        console.error((error as any).message);
-        response.status(400).send();
+        console.error(error);
+        response.status(500).send();
     }
 }
 
@@ -48,7 +48,7 @@ const deleteComment = async (request:Request, response:Response) => {
         await CommentModel.findByIdAndDelete(commentId);
         response.send();
     } catch (error) {
-        console.error((error as any).message);
+        console.error(error);
         response.status(400).send();
     }
 }
