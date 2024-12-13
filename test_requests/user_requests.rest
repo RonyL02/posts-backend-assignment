@@ -1,0 +1,30 @@
+###
+
+GET http://localhost:3000/users/
+
+###
+
+GET http://localhost:3000/users/675c0d7fb3fb48d3315ab109
+
+###
+POST  http://localhost:3000/users/
+Content-Type: application/json
+
+{
+    "username":"sfsdfsd",
+    "password":"sdffssdf",
+    "email":"sdfssdf"
+}
+
+###
+PUT http://localhost:3000/users/675c0d7fb3fb48d3315ab109
+Content-Type: application/json
+
+{
+    "username":"sfsdfsd",
+    "password":"sdffssdf",
+    "email":"sdfssdf"
+}
+
+###
+DELETE http://localhost:3000/users/675c0d7fb3fb48d3315ab109

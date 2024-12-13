@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import { CommentRouter } from './routes/comment_routes';
 import { PostRouter } from './routes/post_routes';
+import { UserRouter } from './routes/user_routes';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ export const initApp = async () => {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use('/comments', CommentRouter);
     app.use('/posts', PostRouter);
+    app.use('/users', UserRouter);
     
     return app;
 }
