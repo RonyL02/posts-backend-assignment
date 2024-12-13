@@ -11,6 +11,6 @@ UserRouter.put("/:id", UserController.updateUser);
 
 UserRouter.post("/", UserController.createUser);
 
-UserRouter.post("/", UserController.deleteUser);
+UserRouter.delete("/", UserController.deleteUser);
 
 export { UserRouter };

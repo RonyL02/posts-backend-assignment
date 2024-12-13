@@ -9,7 +9,7 @@ export type IUser = {
 
 const Schema = mongoose.Schema;
 
-const postSchema = new Schema({
+const userSchema = new Schema({
     username: {
         type: String,
         required: true,
@@ -24,4 +24,4 @@ const postSchema = new Schema({
     },
 });
 
-export const UserModel = mongoose.model("Users", postSchema);
+export const UserModel = mongoose.model<IUser>("Users", userSchema);
