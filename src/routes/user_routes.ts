@@ -1,16 +1,16 @@
-import * as UserController from "../controllers/user_controller";
 import express from "express";
-
+import { UserController } from "../controllers/user_controller";
+const userController=new UserController();
 const UserRouter = express.Router();
 
-UserRouter.get("/", UserController.getAllUsers);
+UserRouter.get("/", userController.find.bind(userController));
 
-UserRouter.get("/:id", UserController.getUserById);
+UserRouter.get("/:id", userController.findById.bind(userController));
 
-UserRouter.put("/:id", UserController.updateUser);
+UserRouter.put("/:id", userController.update.bind(userController));
 
-UserRouter.post("/", UserController.createUser);
+UserRouter.post("/", userController.create.bind(userController));
 
-UserRouter.delete("/", UserController.deleteUser);
+UserRouter.delete("/", userController.delete.bind(userController));
 
 export { UserRouter };

@@ -1,15 +1,16 @@
 import express from 'express';
-import * as CommentController from '../controllers/comment_controller';
-
-
+import { CommentController } from '../controllers/comment_controller';
+const commentController=new CommentController();
 const CommentRouter = express.Router();
 
-CommentRouter.post('/', CommentController.createComment);
+CommentRouter.post('/', commentController.create.bind(commentController));
 
-CommentRouter.get('/', CommentController.getComments);
+CommentRouter.get('/', commentController.find.bind(commentController));
 
-CommentRouter.put('/:id', CommentController.updateComment);
+CommentRouter.put('/:id',  commentController.update.bind(commentController));
 
-CommentRouter.delete('/:id', CommentController.deleteComment);
+CommentRouter.delete('/:id', commentController.delete.bind(commentController));
+
+CommentRouter.get('/:id', commentController.findById.bind(commentController));
 
 export { CommentRouter };

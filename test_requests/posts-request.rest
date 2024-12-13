@@ -6,7 +6,7 @@ GET http://localhost:3000/posts/
 GET  http://localhost:3000/posts/673924d57453a2741caf84e1
 
 ###
-GET http://localhost:3000/posts?sender=57866423
+GET http://localhost:3000/posts?senderId=1111
 
 
 ###
