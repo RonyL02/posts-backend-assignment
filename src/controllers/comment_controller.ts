@@ -1,8 +1,8 @@
 
-import CommentModel from '../models/comment_model';
+import { CommentModel } from '../models/comment_model';
 import { Request, Response } from 'express';
 
-const createComment = async (request:Request, response:Response) => {
+const createComment = async (request: Request, response: Response) => {
     const newComment = request.body;
 
     try {
@@ -16,7 +16,7 @@ const createComment = async (request:Request, response:Response) => {
     }
 }
 
-const getComments = async (request:Request, response:Response) => {
+const getComments = async (request: Request, response: Response) => {
     const postId = request.query.post;
 
     try {
@@ -28,7 +28,7 @@ const getComments = async (request:Request, response:Response) => {
     }
 }
 
-const updateComment = async (request:Request, response:Response) => {
+const updateComment = async (request: Request, response: Response) => {
     const commentId = request.params.id;
     const updatedComment = request.body;
 
@@ -41,7 +41,7 @@ const updateComment = async (request:Request, response:Response) => {
     }
 }
 
-const deleteComment = async (request:Request, response:Response) => {
+const deleteComment = async (request: Request, response: Response) => {
     const commentId = request.params.id;
 
     try {
@@ -49,7 +49,8 @@ const deleteComment = async (request:Request, response:Response) => {
         response.send();
     } catch (error) {
         console.error(error);
-        response.status(400).send();
+        response.status(500).send();
     }
 }
+
 export { createComment, getComments, updateComment, deleteComment };

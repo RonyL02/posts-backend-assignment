@@ -1,14 +1,14 @@
-import * as postController from "../controllers/post_controller";
+import * as PostController from "../controllers/post_controller";
 import express from "express";
 
 const PostRouter = express.Router();
 
-PostRouter.get("/", postController.getAllPosts);
+PostRouter.get("/", PostController.getAllPosts);
 
-PostRouter.get("/:id", postController.getPostById);
+PostRouter.get("/:id", PostController.getPostById);
 
-PostRouter.put("/:id", postController.updatePost);
+PostRouter.put("/:id", PostController.updatePost);
 
-PostRouter.post("/", postController.createPost);
+PostRouter.post("/", PostController.createPost);
 
 export { PostRouter };
