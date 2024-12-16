@@ -1,6 +1,6 @@
 import express from "express";
 import { UserController } from "../controllers/user_controller";
-const userController=new UserController();
+const userController = new UserController();
 const UserRouter = express.Router();
 
 UserRouter.get("/", userController.find.bind(userController));

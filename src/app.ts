@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import { CommentRouter } from './routes/comment_routes';
 import { PostRouter } from './routes/post_routes';
 import { UserRouter } from './routes/user_routes';
+import { AuthRouter } from './routes/auth_routes';
 
 dotenv.config();
 
@@ -14,12 +15,13 @@ const initDB = async () => {
     if (!dbConnectionUrl) {
         throw new Error('DB_CONNECTION_URL is not defined');
     }
-    
-    await mongoose.connect(dbConnectionUrl);
 
-    const db = mongoose.connection;
-    db.on('error', (error: Error) => console.error(error));
-    db.once('open', () => console.log('connected to db'));
+    try {
+        await mongoose.connect(dbConnectionUrl, {});
+        console.log('connected to db')
+    } catch (error) {
+        console.error(`failed connecting to db: ${error}`);
+    }
 }
 
 export const initApp = async () => {
@@ -31,11 +33,12 @@ export const initApp = async () => {
     app.use('/comments', CommentRouter);
     app.use('/posts', PostRouter);
     app.use('/users', UserRouter);
-    
+    app.use('/auth', AuthRouter);
+
     return app;
 }
 
-const start = async ()=>{
+const start = async () => {
     const app = await initApp();
 
     const port = process.env.PORT;

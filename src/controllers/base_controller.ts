@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { Model } from "mongoose";
 
 export abstract class BaseController<T> {
-    constructor(private readonly model: Model<T>) { }
+    constructor(protected readonly model: Model<T>) { }
 
     async find({ query }: Request, response: Response) {
         try {
