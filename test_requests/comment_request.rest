@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
     "senderId":555555,
-    "postId":"673924d57453a2741caf84e1",
+    "postId":"675c94e21ac80365dc8bc766",
     "content":"nice"
 }
 
