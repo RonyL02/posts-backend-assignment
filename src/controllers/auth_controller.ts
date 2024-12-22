@@ -3,7 +3,7 @@ import { BaseController } from "./base_controller";
 import { IUser, UserModel } from "../models/user_model";
 import { StatusCodes } from "http-status-codes";
 import { compare } from "bcrypt";
-
+import { sign } from 'jsonwebtoken'
 export class AuthController extends BaseController<IUser> {
     constructor() {
         super(UserModel);
@@ -34,7 +34,12 @@ export class AuthController extends BaseController<IUser> {
                 return
             }
 
-            response.send({ id: user._id })
+            const accessToken = sign(
+                { _id: user._id },
+                process.env.ACCESS_TOKEN_SECRET!,
+                { expiresIn: process.env.JWT_TOKEN_EXPIRATION })
+
+            response.send({ accessToken })
         } catch (error) {
             console.error('passwords are not matching');
             response.status(StatusCodes.UNAUTHORIZED)
