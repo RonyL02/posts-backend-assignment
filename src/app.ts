@@ -7,6 +7,7 @@ import { CommentRouter } from './routes/comment_routes';
 import { PostRouter } from './routes/post_routes';
 import { UserRouter } from './routes/user_routes';
 
+
 dotenv.config();
 
 const initDB = async () => {
@@ -35,14 +36,3 @@ export const initApp = async () => {
     return app;
 }
 
-const start = async ()=>{
-    const app = await initApp();
-
-    const port = process.env.PORT;
-
-    app.listen(port, () => {
-        console.log(`Posts backend is running on port ${port} 🖼️`);
-    });
-}
-
-start();
