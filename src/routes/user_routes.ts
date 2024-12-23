@@ -11,6 +11,6 @@ UserRouter.put("/:id", userController.update.bind(userController));
 
 UserRouter.post("/", userController.create.bind(userController));
 
-UserRouter.delete("/", userController.delete.bind(userController));
+UserRouter.delete("/:id", userController.delete.bind(userController));
 
 export { UserRouter };
