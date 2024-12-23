@@ -1,7 +1,10 @@
 import express from 'express';
 import { CommentController } from '../controllers/comment_controller';
+import { authenticationMiddleware } from '../middlewares/authentication_middleware';
 const commentController=new CommentController();
 const CommentRouter = express.Router();
+
+CommentRouter.use(authenticationMiddleware)
 
 CommentRouter.post('/', commentController.create.bind(commentController));
 

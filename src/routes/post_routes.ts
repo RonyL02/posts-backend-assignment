@@ -1,7 +1,10 @@
 import express from "express";
 import { PostController } from "../controllers/post_controller";
+import { authenticationMiddleware } from "../middlewares/authentication_middleware";
 const postController=new PostController();
 const PostRouter = express.Router();
+
+PostRouter.use(authenticationMiddleware);
 
 PostRouter.get("/", postController.find.bind(postController));
 
