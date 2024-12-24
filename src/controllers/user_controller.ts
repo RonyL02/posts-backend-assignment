@@ -15,7 +15,7 @@ export class UserController extends BaseController<IUser> {
 
         if (!(email && password)) {
             console.error('invalid credentials');
-            response.status(StatusCodes.BAD_REQUEST)
+            response.status(StatusCodes.BAD_REQUEST).send()
             return
         }
 

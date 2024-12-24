@@ -89,22 +89,10 @@ export class AuthController extends BaseController<IUser> {
                 return
             }
 
-            const payload = { _id: user._id }
-
-            const accessToken = sign(
-                payload,
-                process.env.ACCESS_TOKEN_SECRET!,
-                { expiresIn: process.env.JWT_TOKEN_EXPIRATION })
-
-            const refreshToken = sign(
-                payload,
-                process.env.REFRESH_TOKEN_SECRET!
-            )
-
-            const tokensWithoutOutdatedToken = user.tokens.filter(t => t !== token)
+            const tokensWithoutCurrentRefreshToken = user.tokens.filter(t => t !== token)
 
             await this.model.findByIdAndUpdate(user._id, {
-                tokens: tokensWithoutOutdatedToken
+                tokens: tokensWithoutCurrentRefreshToken
             })
 
             response.send()
@@ -151,10 +139,10 @@ export class AuthController extends BaseController<IUser> {
                 process.env.REFRESH_TOKEN_SECRET!
             )
 
-            const tokensWithoutOutdatedToken = user.tokens.filter(t => t !== token)
+            const tokensWithoutCurrentRefreshToken = user.tokens.filter(t => t !== token)
 
             await this.model.findByIdAndUpdate(user._id, {
-                tokens: [...tokensWithoutOutdatedToken, refreshToken]
+                tokens: [...tokensWithoutCurrentRefreshToken, refreshToken]
             })
 
             response.send({ accessToken, refreshToken })
