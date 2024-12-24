@@ -10,8 +10,8 @@ export class AuthController extends BaseController<IUser> {
         super(UserModel);
     }
 
-    async login({ body: credentials }: Request, response: Response) {
-        const { email, password } = credentials
+    async login(request: Request, response: Response) {
+        const { email, password } = request.body
 
         if (!(email && password)) {
             console.error('invalid credentials');
@@ -55,8 +55,8 @@ export class AuthController extends BaseController<IUser> {
 
             response.send({ accessToken, refreshToken })
         } catch (error) {
-            console.error('passwords are not matching');
-            response.status(StatusCodes.UNAUTHORIZED)
+            console.error(error);
+            response.status(StatusCodes.UNAUTHORIZED).send()
             return
         }
     }
@@ -107,7 +107,7 @@ export class AuthController extends BaseController<IUser> {
                 tokens: tokensWithoutOutdatedToken
             })
 
-            response.send({ accessToken, refreshToken })
+            response.send()
         } catch (error) {
             console.error(error);
             response.status(StatusCodes.FORBIDDEN)

@@ -6,7 +6,7 @@ export abstract class BaseController<T> {
     constructor(protected readonly model: Model<T>) { }
 
     async find(request: Request, response: Response) {
-        const {query} = request;
+        const { query } = request;
         try {
             const items = await this.model.find(query as object);
             response.send(items);
@@ -17,7 +17,7 @@ export abstract class BaseController<T> {
     }
 
     async findById(request: Request, response: Response) {
-        const { params: { id } } = request; 
+        const { params: { id } } = request;
         try {
             const item = await this.model.findById(id);
             if (item) {
@@ -32,8 +32,8 @@ export abstract class BaseController<T> {
     }
 
     async create(request: Request, response: Response) {
-        const { body: newItem } =request;
-               try {
+        const { body: newItem } = request;
+        try {
             const { _id: newId } = await this.model.create(newItem);
             response.status(StatusCodes.CREATED).send({ newId });
         } catch (error) {
@@ -43,7 +43,7 @@ export abstract class BaseController<T> {
     }
 
     async update(request: Request, response: Response) {
-        const { body: updatedItemData, params: { id } }=request;
+        const { body: updatedItemData, params: { id } } = request;
         try {
             const updatedItem = await this.model.findByIdAndUpdate(id, updatedItemData);
 
@@ -59,7 +59,7 @@ export abstract class BaseController<T> {
     }
 
     async delete(request: Request, response: Response) {
-        const { params: { id } }=request;
+        const { params: { id } } = request;
         try {
             const deltedItem = await this.model.findByIdAndDelete(id)
 

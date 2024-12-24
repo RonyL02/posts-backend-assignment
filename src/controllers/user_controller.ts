@@ -8,7 +8,8 @@ export class UserController extends BaseController<IUser> {
         super(UserModel);
     }
 
-    async create({ body: user }: Request, response: Response) {
+    async create(request: Request, response: Response) {
+        const user = request.body
         const email = user.email
         const password = user.password
 
@@ -38,12 +39,14 @@ export class UserController extends BaseController<IUser> {
             const salt = await genSalt(10)
             const password = await hash(user.password, salt)
 
-            const { _id: newId } = await this.model.create({
+            const newUser = {
                 ...user,
                 password
-            })
+            }
 
-            response.status(StatusCodes.CREATED).send({ newId })
+            request.body = newUser
+
+            await super.create(request, response)
         } catch (error) {
             console.error('failed creating user', error);
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).send()

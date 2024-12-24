@@ -16,3 +16,13 @@ Content-Type: application/json
     "username": "asdasd",
     "password": "adads"
 }
+
+
+###
+POST http://localhost:3000/auth/refreshToken
+Content-Type: application/json
+
+{
+    "username": "asdasd",
+    "password": "adads"
+}
