@@ -47,13 +47,13 @@ export class AuthController extends BaseController<IUser> {
                 process.env.REFRESH_TOKEN_SECRET!
             )
 
-            const updatedTokens = user.tokens === null ? [refreshToken] : [...user.tokens, refreshToken]
+            const updatedTokens = user.tokens === undefined ? [refreshToken] : [...user.tokens, refreshToken]
 
             await this.model.findByIdAndUpdate(user._id, {
                 tokens: updatedTokens
             })
 
-            response.send({ accessToken, refreshToken })
+            response.send({ accessToken, refreshToken, userId: user._id })
         } catch (error) {
             console.error(error);
             response.status(StatusCodes.UNAUTHORIZED).send()
@@ -80,7 +80,7 @@ export class AuthController extends BaseController<IUser> {
                 return
             }
 
-            if (!user.tokens.includes(token)) {
+            if (!user.tokens?.includes(token)) {
                 await this.model.findByIdAndUpdate(user._id, {
                     tokens: []
                 })
@@ -89,7 +89,7 @@ export class AuthController extends BaseController<IUser> {
                 return
             }
 
-            const tokensWithoutCurrentRefreshToken = user.tokens.filter(t => t !== token)
+            const tokensWithoutCurrentRefreshToken = user.tokens?.filter(t => t !== token)
 
             await this.model.findByIdAndUpdate(user._id, {
                 tokens: tokensWithoutCurrentRefreshToken
@@ -120,7 +120,7 @@ export class AuthController extends BaseController<IUser> {
                 return
             }
 
-            if (!user.tokens.includes(token)) {
+            if (!user.tokens?.includes(token)) {
                 await this.model.findByIdAndUpdate(user._id, {
                     tokens: []
                 })

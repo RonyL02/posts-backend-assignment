@@ -5,93 +5,127 @@ import { initApp } from "../app";
 import { CommentModel, IComment } from "../models/comment_model";
 import testCommentJson from "./test_comments.json";
 import { StatusCodes } from "http-status-codes";
-
-
+import { UserModel } from "../models/user_model";
+import { createUser, loginUser } from "./utils";
 
 const baseUrl = "/comments";
 
- type Comment = {
-    senderId: number;
-    postId: string;
-    content: string;
-    _id?: string
-  }
-  
+type TestComment = Omit<IComment, 'senderId'> & { senderId?: string };
+
 let app: Express;
-  const testComments:Comment[]=testCommentJson;
+const testComments: TestComment[] = testCommentJson;
+
+let userId: string | undefined;
+const userCredentials = {
+  email: "sdfds@dsf.sdf",
+  password: "sdfsdfsd"
+}
+let accessToken: string | undefined;
 
 beforeAll(async () => {
   console.log("Before all tests");
   app = await initApp();
   await CommentModel.deleteMany();
+  await UserModel.deleteMany();
+  userId = await createUser(app, {
+    ...userCredentials,
+    username: "sdfsdfd"
+  })
+});
+
+beforeEach(async () => {
+  const responseBody = await loginUser(app, userCredentials.email, userCredentials.password)
+  accessToken = responseBody.accessToken;
 });
 
 afterAll(async () => {
   console.log("After all tests");
+  await CommentModel.deleteMany()
+  await UserModel.deleteMany()
   await mongoose.connection.close();
 });
 
 describe("Comments API Tests", () => {
   test("Get all comments when empty", async () => {
-    const response = await request(app).get(baseUrl);
+    const response = await request(app).get(baseUrl)
+    .set('Authorization', `JWT ${accessToken}`);
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body.length).toBe(0);
   });
 
   test("Create new comments", async () => {
     for (let comment of testComments) {
-      const response = await request(app).post(baseUrl).send(comment);
+      const response = await request(app).post(baseUrl)
+      .set('Authorization', `JWT ${accessToken}`)
+      .send(comment);
+
       expect(response.statusCode).toBe(StatusCodes.CREATED);
       expect(response.body.newId).toBeDefined();
-        comment._id = response.body.newId;
+
+      comment._id = response.body.newId;
     }
   });
 
-  
   test("Get all comments", async () => {
-    const response = await request(app).get(baseUrl);
+    const response = await request(app).get(baseUrl)
+    .set('Authorization', `JWT ${accessToken}`);
+
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body.length).toBe(testComments.length);
   });
 
   test("Get comment by ID", async () => {
-    const response = await request(app).get(`${baseUrl}/${testComments[0]._id}`);
+    const response = await request(app).get(`${baseUrl}/${testComments[0]._id}`)
+    .set('Authorization', `JWT ${accessToken}`);
+
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body.content).toBe(testComments[0].content);
   });
-  
+
   test("Get comments by post ID", async () => {
     const postId = testComments[0].postId;
-    const response = await request(app).get(`${baseUrl}?postId=${postId}`);
+    const response = await request(app).get(`${baseUrl}?postId=${postId}`)
+    .set('Authorization', `JWT ${accessToken}`);
+
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body.length).toBeGreaterThan(0);
     expect(response.body[0].postId).toBe(postId);
   });
 
   test("Update a comment", async () => {
-    const updatedContent = { content: "Updated content" };
+    const updatedComment = { content: "Updated content" };
     const response = await request(app)
       .put(`${baseUrl}/${testComments[0]._id}`)
-      .send(updatedContent);
+      .set('Authorization', `JWT ${accessToken}`)
+      .send(updatedComment);
+
     expect(response.statusCode).toBe(StatusCodes.OK);
 
-    const responseGet = await request(app).get(`${baseUrl}/${testComments[0]._id}`);
-    expect(responseGet.body.content).toBe(updatedContent.content);
+    const getResponse = await request(app).get(`${baseUrl}/${testComments[0]._id}`)
+    .set('Authorization', `JWT ${accessToken}`);
+
+    expect(getResponse.body.content).toBe(updatedComment.content);
+    expect(getResponse.body.postId).toBe(testComments[0].postId);
   });
 
   test("Delete a comment", async () => {
-    const response = await request(app).delete(`${baseUrl}/${testComments[0]._id}`);
+    const response = await request(app).delete(`${baseUrl}/${testComments[0]._id}`)
+    .set('Authorization', `JWT ${accessToken}`);
+
     expect(response.statusCode).toBe(StatusCodes.OK);
 
-    const responseGet = await request(app).get(`${baseUrl}/${testComments[0]._id}`);
+    const responseGet = await request(app).get(`${baseUrl}/${testComments[0]._id}`)
+    .set('Authorization', `JWT ${accessToken}`);
+
     expect(responseGet.statusCode).toBe(StatusCodes.NOT_FOUND);
   });
 
-  test("Fail to create invalid comment", async () => {
+  test("Try to create invalid comment", async () => {
     const invalidComment = { senderId: 3 };
-    const response = await request(app).post(baseUrl).send(invalidComment);
+    const response = await request(app).post(baseUrl)
+    .set('Authorization', `JWT ${accessToken}`)
+    .send(invalidComment);
+
     expect(response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
   });
-  
-
 });

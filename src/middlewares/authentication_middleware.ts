@@ -7,11 +7,12 @@ export const authenticationMiddleware = (request: RequestWithUser, response: Res
     const token = request.headers['authorization']?.split(' ')[1];
 
     if (!token) {
+        console.error('token not found');
         response.status(StatusCodes.UNAUTHORIZED).send();
-    }
-    else {
+    } else {
         verify(token, process.env.ACCESS_TOKEN_SECRET!, (error, user) => {
             if (error) {
+                console.error(`token is corrupted: ${error}`);
                 response.status(StatusCodes.FORBIDDEN).send()
             } else {
                 request.user = user as Payload;
