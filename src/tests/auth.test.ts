@@ -17,11 +17,6 @@ const user: UserInfo = {
   email: "aaa@dfg.fgd",
 }
 
-const createUser = async () => {
-  const { body: { newId } } = await request(app).post('/users').send(user)
-  user._id = newId
-}
-
 beforeAll(async () => {
   app = await initApp()
   await PostModel.deleteMany()
