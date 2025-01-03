@@ -32,7 +32,8 @@ export class AuthController extends BaseController<IUser> {
 
             const payload = { _id: user._id }
             const { accessToken, refreshToken } = this.generateTokens(payload);
-            const updatedTokens = user.tokens === undefined ? [refreshToken] : [...user.tokens, refreshToken]
+            
+            const updatedTokens = user.tokens.length === 0 ? [refreshToken] : [...user.tokens, refreshToken]
 
             await this.model.findByIdAndUpdate(user._id, {
                 tokens: updatedTokens
@@ -61,7 +62,7 @@ export class AuthController extends BaseController<IUser> {
                 return sendError(response, StatusCodes.FORBIDDEN, 'invalid token');
             }
 
-            if (!user.tokens || !user.tokens?.includes(refreshToken)) {
+            if (!user.tokens || !user.tokens.includes(refreshToken)) {
                 await this.model.findByIdAndUpdate(user._id, {
                     tokens: []
                 });
@@ -69,7 +70,7 @@ export class AuthController extends BaseController<IUser> {
                 return sendError(response, StatusCodes.FORBIDDEN, 'invalid token');
             }
 
-            const tokensWithoutCurrentRefreshToken = user.tokens?.filter(token => token !== refreshToken);
+            const tokensWithoutCurrentRefreshToken = user.tokens.filter(token => token !== refreshToken);
 
             await this.model.findByIdAndUpdate(user._id, {
                 tokens: tokensWithoutCurrentRefreshToken
@@ -97,7 +98,7 @@ export class AuthController extends BaseController<IUser> {
                 return sendError(response, StatusCodes.FORBIDDEN, 'invalid token');
             }
 
-            if (!user.tokens?.includes(refreshToken)) {
+            if (!user.tokens.includes(refreshToken)) {
                 await this.model.findByIdAndUpdate(user._id, {
                     tokens: []
                 })

@@ -1,9 +1,9 @@
 import request from 'supertest'
 
 import { Express } from "express";
-import { IUser } from '../models/user_model';
+import { TestUser } from './users.test';
 
-export const createUser = async (app: Express, user: IUser): Promise<string> => {
+export const createUser = async (app: Express, user: TestUser): Promise<string> => {
     const response = await request(app).post('/users').send(user)
     return response.body.newId;
 };
