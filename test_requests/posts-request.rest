@@ -1,6 +1,6 @@
 ###
 GET http://localhost:3000/posts/
-
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzZmZWJmNjdmNjRkYzQ5OTRkNjY0ZDQiLCJpYXQiOjE3MzUzODgxNzIsImV4cCI6MTczNTM5MTc3Mn0.fe-FhbJpVDDzOminHXHgmFeumE2bEBdSBXh0u9CM0r8
 
 ###
 GET  http://localhost:3000/posts/673924d57453a2741caf84e1
@@ -12,9 +12,9 @@ GET http://localhost:3000/posts?senderId=1111
 ###
 POST  http://localhost:3000/posts/
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzZmZWJmNjdmNjRkYzQ5OTRkNjY0ZDQiLCJpYXQiOjE3MzUzODgxNzIsImV4cCI6MTczNTM5MTc3Mn0.fe-FhbJpVDDzOminHXHgmFeumE2bEBdSBXh0u9CM0r8
 
 {
-    "senderId":1111,
     "title":"hello",
     "content":"world"
 }

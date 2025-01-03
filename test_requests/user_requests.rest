@@ -4,16 +4,16 @@ GET http://localhost:3000/users/
 
 ###
 
-GET http://localhost:3000/users/675c0d7fb3fb48d3315ab109
+GET http://localhost:3000/users/6760a4f40c38703fc8c3e976
 
 ###
 POST  http://localhost:3000/users/
 Content-Type: application/json
 
 {
-    "username":"sfsdfsd",
+    "username":"aaa",
     "password":"sdffssdf",
-    "email":"sdfssdf"
+    "email":"aaa"
 }
 
 ###

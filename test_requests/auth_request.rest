@@ -1,0 +1,21 @@
+###
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email":"aaa",
+    "password": "sdffssdf"
+}
+
+
+###
+POST http://localhost:3000/auth/logout
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzYwYTRmNDBjMzg3MDNmYzhjM2U5NzYiLCJpYXQiOjE3MzUwMDExNDl9.cJuuB0NJ4Iaq1-Eat6du57Pq8g7JDyjP7HBN1Xd5x1I
+
+
+
+###
+POST http://localhost:3000/auth/refreshToken
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzYwYTRmNDBjMzg3MDNmYzhjM2U5NzYiLCJpYXQiOjE3MzUwMDEwNjZ9.EHXfkR7kXI3I0gq-raE2cdmy7ZQSSviETLL1CvK9lSs
