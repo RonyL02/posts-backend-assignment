@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Model } from "mongoose";
+import { sendError } from "../utils";
 
 export abstract class BaseController<T> {
     constructor(protected readonly model: Model<T>) { }
@@ -11,8 +12,7 @@ export abstract class BaseController<T> {
             const items = await this.model.find(query as object);
             response.send(items);
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+            sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, JSON.stringify(error));
         }
     }
 
@@ -26,8 +26,7 @@ export abstract class BaseController<T> {
                 response.status(StatusCodes.NOT_FOUND).send();
             }
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+            sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, JSON.stringify(error));
         }
     }
 
@@ -37,8 +36,7 @@ export abstract class BaseController<T> {
             const { _id: newId } = await this.model.create(newItem);
             response.status(StatusCodes.CREATED).send({ newId });
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+            sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, JSON.stringify(error));
         }
     }
 
@@ -53,8 +51,7 @@ export abstract class BaseController<T> {
                 response.status(StatusCodes.NOT_FOUND).send();
             }
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+            sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, JSON.stringify(error));
         }
     }
 
@@ -69,8 +66,7 @@ export abstract class BaseController<T> {
                 response.status(StatusCodes.NOT_FOUND).send();
             }
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+            sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, JSON.stringify(error));
         }
     }
 }

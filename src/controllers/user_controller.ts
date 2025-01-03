@@ -3,6 +3,7 @@ import { BaseController } from "./base_controller";
 import { IUser, UserModel } from "../models/user_model";
 import { StatusCodes } from "http-status-codes";
 import { genSalt, hash } from 'bcrypt'
+import { sendError } from "../utils";
 export class UserController extends BaseController<IUser> {
     constructor() {
         super(UserModel);
@@ -14,9 +15,7 @@ export class UserController extends BaseController<IUser> {
         const password = user.password
 
         if (!(email && password)) {
-            console.error('invalid credentials');
-            response.status(StatusCodes.BAD_REQUEST).send()
-            return
+            return sendError(response, StatusCodes.BAD_REQUEST, 'invalid credentials');
         }
 
         try {
@@ -25,31 +24,26 @@ export class UserController extends BaseController<IUser> {
             })
 
             if (user) {
-                console.error('user already exists');
-                response.status(StatusCodes.CONFLICT).send()
-                return
+                return sendError(response, StatusCodes.CONFLICT, 'user already exists');
             }
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR)
-            return
+            return sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, JSON.stringify(error));
         }
 
         try {
-            const salt = await genSalt(10)
-            const password = await hash(user.password, salt)
+            const salt = await genSalt(10);
+            const password = await hash(user.password, salt);
 
             const newUser = {
                 ...user,
                 password
-            }
+            };
 
-            request.body = newUser
+            request.body = newUser;
 
-            await super.create(request, response)
+            await super.create(request, response);
         } catch (error) {
-            console.error('failed creating user', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
+            sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, JSON.stringify(error));
         }
     }
 }

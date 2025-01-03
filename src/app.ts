@@ -19,7 +19,7 @@ const initDB = async () => {
     }
 
     try {
-        await mongoose.connect(dbConnectionUrl, {});
+        await mongoose.connect(dbConnectionUrl);
         console.log('connected to db')
     } catch (error) {
         console.error(`failed connecting to db: ${error}`);
