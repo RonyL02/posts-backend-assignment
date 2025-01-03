@@ -82,6 +82,13 @@ describe("Comments API Tests", () => {
     expect(response.body.content).toBe(testComments[0].content);
   });
 
+  test("Get comment by non existent ID", async () => {
+    const nonExistentId = '673924d57453a2741caf84e1'
+    const response = await request(app).put(`${baseUrl}/${nonExistentId}`)
+      .set('Authorization', `JWT ${accessToken}`);
+    expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
+  });
+
   test("Get comments by post ID", async () => {
     const postId = testComments[0].postId;
     const response = await request(app).get(`${baseUrl}?postId=${postId}`)
@@ -108,6 +115,13 @@ describe("Comments API Tests", () => {
     expect(getResponse.body.postId).toBe(testComments[0].postId);
   });
 
+  test("Update comment by non existent ID", async () => {
+    const nonExistentId = '673924d57453a2741caf84e1'
+    const response = await request(app).put(`${baseUrl}/${nonExistentId}`)
+      .set('Authorization', `JWT ${accessToken}`);
+    expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
+  });
+
   test("Delete a comment", async () => {
     const response = await request(app).delete(`${baseUrl}/${testComments[0]._id}`)
     .set('Authorization', `JWT ${accessToken}`);
@@ -118,6 +132,13 @@ describe("Comments API Tests", () => {
     .set('Authorization', `JWT ${accessToken}`);
 
     expect(responseGet.statusCode).toBe(StatusCodes.NOT_FOUND);
+  });
+
+  test("Delete comment by non existent ID", async () => {
+    const nonExistentId = '673924d57453a2741caf84e1'
+    const response = await request(app).delete(`${baseUrl}/${nonExistentId}`)
+      .set('Authorization', `JWT ${accessToken}`);
+    expect(response.statusCode).toBe(StatusCodes.NOT_FOUND); 
   });
 
   test("Try to create invalid comment", async () => {

@@ -59,6 +59,14 @@ describe("Users API Tests", () => {
         expect(response.body.username).toBe(testUsers[0].username);
     });
 
+    test("Get user by non existent ID", async () => {
+        const nonExistentId = '673924d57453a2741caf84e1'
+        const response = await request(app).get(`${baseUrl}/${nonExistentId}`)
+        
+        expect(response.statusCode).toBe(StatusCodes.NOT_FOUND); 
+      });
+
+
     test("Update a user", async () => {
         const updatedData = { username: "new username" };
         const response = await request(app)
@@ -71,6 +79,13 @@ describe("Users API Tests", () => {
         expect(responseGet.body.username).toBe(updatedData.username);
     });
 
+    test("Update user by non existent ID", async () => {
+        const nonExistentId = '673924d57453a2741caf84e1'
+        const response = await request(app).put(`${baseUrl}/${nonExistentId}`)
+        
+        expect(response.statusCode).toBe(StatusCodes.NOT_FOUND); 
+      });
+
     test("Delete a user", async () => {
         const response = await request(app).delete(`${baseUrl}/${testUsers[0]._id}`);
 
@@ -80,6 +95,14 @@ describe("Users API Tests", () => {
 
         expect(responseGet.statusCode).toBe(StatusCodes.NOT_FOUND);
     });
+
+    test("Delete user by non existent ID", async () => {
+        const nonExistentId = '673924d57453a2741caf84e1'
+        const response = await request(app).delete(`${baseUrl}/${nonExistentId}`)
+        
+        expect(response.statusCode).toBe(StatusCodes.NOT_FOUND); 
+      });
+
 
     test("Try to create invalid user", async () => {
         const invalidUser = { author: "UserWithoutTitle" };
