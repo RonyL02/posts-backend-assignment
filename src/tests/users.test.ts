@@ -8,7 +8,9 @@ import { IUser, UserModel } from "../models/user_model";
 
 let app: Express;
 
-const testUsers: IUser[] = testUsersJson;
+export type TestUser = Omit<IUser, 'tokens'> & { tokens?: string[] };
+
+const testUsers: TestUser[] = testUsersJson;
 
 const baseUrl = "/users";
 
