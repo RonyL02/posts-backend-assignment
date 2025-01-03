@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 export type IPost = {
-  senderId: number;
+  senderId: string;
   title: string;
   content: string;
-  _id: string
+  _id?: string
 }
 
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
   senderId: {
-    type: Number,
+    type: String,
     required: true,
   },
   title: {

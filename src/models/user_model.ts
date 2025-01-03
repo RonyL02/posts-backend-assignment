@@ -4,8 +4,8 @@ export type IUser = {
     username: string;
     password: string
     email: string
-    _id: string,
-    tokens: string[]
+    _id?: string,
+    tokens?: string[]
 }
 
 const Schema = mongoose.Schema;

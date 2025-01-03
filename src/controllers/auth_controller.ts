@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { compare } from "bcrypt";
 import { sign, verify } from 'jsonwebtoken'
 import { Payload } from "../types";
+import { sendError } from "../utils";
 export class AuthController extends BaseController<IUser> {
     constructor() {
         super(UserModel);
@@ -14,141 +15,128 @@ export class AuthController extends BaseController<IUser> {
         const { email, password } = request.body
 
         if (!(email && password)) {
-            console.error('invalid credentials');
-            response.status(StatusCodes.UNAUTHORIZED).send()
-            return
+            return sendError(response, StatusCodes.BAD_REQUEST, 'invalid credentials');
         }
 
         try {
-            const user = await this.model.findOne({ email })
+            const user = await this.model.findOne({ email });
 
             if (!user) {
-                console.error('user does not exist');
-                response.status(StatusCodes.UNAUTHORIZED).send()
-                return
+                return sendError(response, StatusCodes.BAD_REQUEST, 'user does not exist');
             }
 
-            const passwordMatch = await compare(password, user.password)
+            const passwordMatch = await compare(password, user.password);
             if (!passwordMatch) {
-                console.error('passwords are not matching');
-                response.status(StatusCodes.UNAUTHORIZED).send()
-                return
+                return sendError(response, StatusCodes.BAD_REQUEST, 'passwords are not matching');
             }
 
             const payload = { _id: user._id }
-
-            const accessToken = sign(
-                payload,
-                process.env.ACCESS_TOKEN_SECRET!,
-                { expiresIn: process.env.JWT_TOKEN_EXPIRATION })
-
-            const refreshToken = sign(
-                payload,
-                process.env.REFRESH_TOKEN_SECRET!
-            )
-
-            const updatedTokens = user.tokens === null ? [refreshToken] : [...user.tokens, refreshToken]
+            const { accessToken, refreshToken } = this.generateTokens(payload);
+            const updatedTokens = user.tokens === undefined ? [refreshToken] : [...user.tokens, refreshToken]
 
             await this.model.findByIdAndUpdate(user._id, {
                 tokens: updatedTokens
             })
 
-            response.send({ accessToken, refreshToken })
+            response.send({ accessToken, refreshToken, userId: user._id });
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.UNAUTHORIZED).send()
-            return
+            return sendError(response, StatusCodes.INTERNAL_SERVER_ERROR, `${error}`);
         }
     }
 
     async logout(request: Request, response: Response) {
-        const authHeader = request.headers.authorization
-        const token = authHeader?.split(' ')[1]
+        const authHeader = request.headers.authorization;
+        const refreshToken = authHeader?.split(' ')[1];
 
-        if (!token) {
-            response.status(StatusCodes.FORBIDDEN).send()
-            return
+        if (!refreshToken) {
+            return sendError(response, StatusCodes.BAD_REQUEST, 'missing refresh token');
         }
 
         try {
-            const { _id: userId } = verify(token, process.env.REFRESH_TOKEN_SECRET!) as Payload
+            const { _id: userId } = <Payload>verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
 
-            const user = await this.model.findById(userId)
+            const user = await this.model.findById(userId);
 
             if (!user) {
-                response.status(StatusCodes.FORBIDDEN).send()
-                return
+                return sendError(response, StatusCodes.FORBIDDEN, 'invalid token');
             }
 
-            if (!user.tokens.includes(token)) {
+            if (!user.tokens || !user.tokens?.includes(refreshToken)) {
                 await this.model.findByIdAndUpdate(user._id, {
                     tokens: []
-                })
+                });
 
-                response.status(StatusCodes.FORBIDDEN).send()
-                return
+                return sendError(response, StatusCodes.FORBIDDEN, 'invalid token');
             }
 
-            const tokensWithoutCurrentRefreshToken = user.tokens.filter(t => t !== token)
+            const tokensWithoutCurrentRefreshToken = user.tokens?.filter(token => token !== refreshToken);
 
             await this.model.findByIdAndUpdate(user._id, {
                 tokens: tokensWithoutCurrentRefreshToken
-            })
+            });
 
-            response.send()
+            response.send();
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.FORBIDDEN)
+            return sendError(response, StatusCodes.FORBIDDEN, `logout error: ${JSON.stringify(error)}`);
         }
     }
 
     async refreshToken(request: Request, response: Response) {
         const authHeader = request.headers.authorization
-        const token = authHeader?.split(' ')[1]
+        const refreshToken = authHeader?.split(' ')[1]
 
-        if (!token) {
-            response.status(StatusCodes.FORBIDDEN).send()
-            return
+        if (!refreshToken) {
+            return sendError(response, StatusCodes.BAD_REQUEST, 'missing refresh token');
         }
 
         try {
-            const { _id: userId } = verify(token, process.env.REFRESH_TOKEN_SECRET!) as Payload
-            const user = await this.model.findById(userId)
+            const { _id: userId } = <Payload>verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
+            const user = await this.model.findById(userId);
 
             if (!user) {
-                response.status(StatusCodes.FORBIDDEN).send()
-                return
+                return sendError(response, StatusCodes.FORBIDDEN, 'invalid token');
             }
 
-            if (!user.tokens.includes(token)) {
+            if (!user.tokens?.includes(refreshToken)) {
                 await this.model.findByIdAndUpdate(user._id, {
                     tokens: []
                 })
 
-                response.status(StatusCodes.FORBIDDEN).send()
-                return
+                return sendError(response, StatusCodes.FORBIDDEN, 'invalid token');
             }
 
-            const payload = { _id: userId }
-            const accessToken = sign(
-                payload,
-                process.env.ACCESS_TOKEN_SECRET!,
-                { expiresIn: process.env.JWT_TOKEN_EXPIRATION })
-            const refreshToken = sign(
-                payload,
-                process.env.REFRESH_TOKEN_SECRET!
-            )
-
-            const tokensWithoutCurrentRefreshToken = user.tokens.filter(t => t !== token)
+            const payload = { _id: user._id }
+            const { accessToken, refreshToken: newRefreshToken } = this.generateTokens(payload);
+            const tokensWithoutCurrentRefreshToken = user.tokens.filter(token => token !== refreshToken);
 
             await this.model.findByIdAndUpdate(user._id, {
-                tokens: [...tokensWithoutCurrentRefreshToken, refreshToken]
-            })
+                tokens: [...tokensWithoutCurrentRefreshToken, newRefreshToken]
+            });
 
-            response.send({ accessToken, refreshToken })
+            response.send({ accessToken, refreshToken: newRefreshToken });
         } catch (error) {
-            console.error(error);
-            response.status(StatusCodes.FORBIDDEN)
+            return sendError(response, StatusCodes.FORBIDDEN, `refresh token error: ${JSON.stringify(error)}`);
         }
+    }
+
+    private generateTokens(payload: Payload) {
+        const random = Math.floor(Math.random() * 1000000);
+
+        const accessToken = sign(
+            {
+                ...payload,
+                random: random
+            },
+            process.env.ACCESS_TOKEN_SECRET!,
+            { expiresIn: process.env.JWT_TOKEN_EXPIRATION });
+
+        const refreshToken = sign(
+            {
+                _id: payload,
+                random: random
+            },
+            process.env.REFRESH_TOKEN_SECRET!);
+
+        return { accessToken, refreshToken };
     }
 }

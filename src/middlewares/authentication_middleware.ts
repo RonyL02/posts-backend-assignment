@@ -2,22 +2,22 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { verify } from "jsonwebtoken";
 import { Payload, RequestWithUser } from "../types";
+import { sendError } from "../utils";
 
 export const authenticationMiddleware = (request: RequestWithUser, response: Response, next: NextFunction) => {
     const token = request.headers['authorization']?.split(' ')[1];
 
     if (!token) {
-        response.status(StatusCodes.UNAUTHORIZED).send();
-    }
-    else {
+       return sendError(response, StatusCodes.UNAUTHORIZED, 'missing token');
+    } else {
         verify(token, process.env.ACCESS_TOKEN_SECRET!, (error, user) => {
             if (error) {
-                response.status(StatusCodes.FORBIDDEN).send()
+               return sendError(response, StatusCodes.FORBIDDEN, `invalid token: ${JSON.stringify(error)}`);
             } else {
-                request.user = user as Payload;
+                request.user = <Payload>user;
+                next();
             }
         });
     }
 
-    next();
 }

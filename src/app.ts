@@ -7,8 +7,9 @@ import { CommentRouter } from './routes/comment_routes';
 import { PostRouter } from './routes/post_routes';
 import { UserRouter } from './routes/user_routes';
 import { AuthRouter } from './routes/auth_routes';
-
-
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
+import { Express } from 'express';
 dotenv.config();
 
 const initDB = async () => {
@@ -23,6 +24,24 @@ const initDB = async () => {
     } catch (error) {
         console.error(`failed connecting to db: ${error}`);
     }
+}
+
+export const initSwagger = (app: Express) => {
+    const options = {
+        definition: {
+            openapi: "3.0.0",
+            info: {
+                title: "Web Dev Assignment 2 REST API",
+                version: "1.0.0",
+                description: "REST server including authentication using JWT",
+            },
+            servers: [{ url: "http://localhost:3000" }]
+        },
+        apis: ["./src/routes/*.ts"],
+    };
+    const specs = swaggerJsDoc(options);
+
+    app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 }
 
 export const initApp = async () => {

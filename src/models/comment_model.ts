@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 export type IComment = {
-  senderId: number;
+  senderId: string;
   postId: string;
   content: string;
-  _id: string;
+  _id?: string;
 }
 
 const Schema = mongoose.Schema;
 
 const commentSchema = new Schema<IComment>({
   senderId: {
-    type: Number,
+    type: String,
     required: true,
   },
   postId: {
