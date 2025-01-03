@@ -86,6 +86,13 @@ describe("Posts API Tests", () => {
     expect(response.body.content).toBe(testPosts[0].content);
   });
 
+  test("Get post by non existent ID", async () => {
+    const nonExistentId = '673924d57453a2741caf84e1'
+    const response = await request(app).get(`${baseUrl}/${nonExistentId}`)
+      .set('Authorization', `JWT ${accessToken}`);
+    expect(response.statusCode).toBe(StatusCodes.NOT_FOUND); 
+  });
+
   test("Update a post", async () => {
     const updatedData = { title: "Updated Title", content: "Updated Content" };
     const response = await request(app)
@@ -100,6 +107,13 @@ describe("Posts API Tests", () => {
     expect(responseGet.body.content).toBe(updatedData.content);
   });
 
+  test("Update post by non existent ID", async () => {
+    const nonExistentId = '673924d57453a2741caf84e1'
+    const response = await request(app).put(`${baseUrl}/${nonExistentId}`)
+      .set('Authorization', `JWT ${accessToken}`);
+    expect(response.statusCode).toBe(StatusCodes.NOT_FOUND); 
+  });
+  
   test("Try to create invalid post", async () => {
     const invalidPost = { author: "UserWithoutTitle" };
     const response = await request(app).post(baseUrl)
