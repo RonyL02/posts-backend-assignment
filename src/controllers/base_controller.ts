@@ -58,9 +58,9 @@ export abstract class BaseController<T> {
     async delete(request: Request, response: Response) {
         const { params: { id } } = request;
         try {
-            const deltedItem = await this.model.findByIdAndDelete(id)
+            const deletedItem = await this.model.findByIdAndDelete(id);
 
-            if (deltedItem) {
+            if (deletedItem) {
                 response.send();
             } else {
                 response.status(StatusCodes.NOT_FOUND).send();

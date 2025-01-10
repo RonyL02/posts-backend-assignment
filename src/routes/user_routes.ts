@@ -1,5 +1,6 @@
 import express from "express";
 import { UserController } from "../controllers/user_controller";
+import { authenticationMiddleware } from "../middlewares/authentication_middleware";
 const userController = new UserController();
 const UserRouter = express.Router();
 
@@ -48,6 +49,13 @@ const UserRouter = express.Router();
  *     description: Retrieve a list of all users
  *     tags:
  *       - Users
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user token
  *     responses:
  *       200:
  *         description: A list of users
@@ -61,7 +69,7 @@ const UserRouter = express.Router();
  *         description: Server error
  */
 
-UserRouter.get("/", userController.find.bind(userController));
+UserRouter.get("/", authenticationMiddleware, userController.find.bind(userController));
 
 /**
  * @swagger
@@ -72,6 +80,12 @@ UserRouter.get("/", userController.find.bind(userController));
  *     tags:
  *       - Users
  *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user token
  *       - in: path
  *         name: id
  *         schema:
@@ -91,23 +105,23 @@ UserRouter.get("/", userController.find.bind(userController));
  *         description: Server error
  */
 
-UserRouter.get("/:id", userController.findById.bind(userController));
+UserRouter.get("/:id", authenticationMiddleware, userController.findById.bind(userController));
 
 /**
  * @swagger
- * /users/{id}:
+ * /users:
  *   put:
  *     summary: Update a user
  *     description: Update a user by ID
  *     tags:
  *       - Users
  *     parameters:
- *       - in: path
- *         name: id
+ *       - in: header
+ *         name: Authorization
  *         schema:
  *           type: string
  *         required: true
- *         description: The user id
+ *         description: The user token
  *     requestBody:
  *       required: true
  *       content:
@@ -130,7 +144,7 @@ UserRouter.get("/:id", userController.findById.bind(userController));
  *         description: Server error
  */
 
-UserRouter.put("/:id", userController.update.bind(userController));
+UserRouter.put("/", authenticationMiddleware, userController.update.bind(userController));
 
 /**
  * @swagger
@@ -171,19 +185,19 @@ UserRouter.post("/", userController.create.bind(userController));
 
 /**
  * @swagger
- * /users/{id}:
+ * /users/:
  *   delete:
  *     summary: Delete a user by ID
  *     description: Delete a single user by its ID
  *     tags:
  *       - Users
  *     parameters:
- *       - in: path
- *         name: id
+ *       - in: header
+ *         name: Authorization
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the user
+ *         description: The user token
  *     responses:
  *       200:
  *         description: User deleted successfully
@@ -193,6 +207,6 @@ UserRouter.post("/", userController.create.bind(userController));
  *         description: Server error
  */
 
-UserRouter.delete("/:id", userController.delete.bind(userController));
+UserRouter.delete("/", authenticationMiddleware, userController.delete.bind(userController));
 
 export { UserRouter };
