@@ -41,8 +41,8 @@ beforeEach(async () => {
 
 afterAll(async () => {
   console.log("After all tests");
-  await PostModel.deleteMany()
-  await UserModel.deleteMany()
+  await PostModel.deleteMany();
+  await UserModel.deleteMany();
   await mongoose.connection.close();
 });
 

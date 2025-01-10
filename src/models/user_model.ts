@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 export type IUser = {
     username: string;
-    password: string
-    email: string
-    _id?: string,
-    tokens: string[]
+    password: string;
+    email: string;
+    _id?: string;
+    tokens: string[];
 }
 
 const Schema = mongoose.Schema;

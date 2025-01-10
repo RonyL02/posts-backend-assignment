@@ -19,5 +19,4 @@ export const authenticationMiddleware = (request: RequestWithUser, response: Res
             }
         });
     }
-
 }
