@@ -136,7 +136,8 @@ export class AuthController extends BaseController<IUser> {
                 _id: payload,
                 random: random
             },
-            process.env.REFRESH_TOKEN_SECRET!);
+            process.env.REFRESH_TOKEN_SECRET!,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
 
         return { accessToken, refreshToken };
     }
