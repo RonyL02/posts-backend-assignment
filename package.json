@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "test": "copy .env_test .env && jest --detectOpenHandles --forceExit --runInBand",
-    "start": "copy .env_dev .env && node ./build/main.js",
+    "start": "tsc && copy .env_dev .env && node ./build/main.js",
     "dev": "copy .env_dev .env && nodemon ./src/main.ts"
   },
   "author": "",
